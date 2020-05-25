@@ -1,6 +1,8 @@
 # pyphy
 Python library that interacts with NCBI taxonomy 
 
+This is the Python implementation of the blog post http://dgg32.blogspot.com/2013/07/pyphy-wrapper-program-for-ncbi-sqlite.html
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
