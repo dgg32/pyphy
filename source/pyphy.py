@@ -19,21 +19,25 @@ if os.path.exists(config_file):
 
 
 
-
-#print (config_file)
-#print (f"Loading {db}.....")
-#print ("Done.")
-
 unknown = -1
 no_rank = "no rank"
 
 #pyphy.getTaxidByName("Bacteria",1)
 def getTaxidByName(name,limit=1, synonym=True):
-    #print (db)
+    """get taxid given a taxonomic name or a synonym
+    
+    Args:
+        name (str): query taxonomic name
+        limit (int, optional): how many taxid to return
+        synonym (bool, optional): should a synonym search be performed
+    
+    Returns:
+        list: return a list of taxid if the name is found otherwise a list of unknown
+    """
     conn = sqlite3.connect(db)
     cursor = conn.cursor()
     command = "SELECT taxid FROM tree WHERE name = '" + str(name).replace("'", "''") +  "';"
-    #print command
+
     cursor.execute(command)
     results = cursor.fetchall()
     
@@ -70,6 +74,14 @@ def getTaxidByName(name,limit=1, synonym=True):
     
 #pyphy.getRankByTaxid("2")
 def getRankByTaxid(taxid):
+    """get the rank given a taxid
+    
+    Args:
+        taxid (int or str):query taxid
+    
+    Returns:
+        str: the rank of the taxid
+    """
     conn = sqlite3.connect(db)
     cursor = conn.cursor()
     command = "SELECT rank FROM tree WHERE taxid = '" + str(taxid) +  "';"
@@ -82,9 +94,17 @@ def getRankByTaxid(taxid):
     else:
         return no_rank
 
-#pyphy.getRankByName("Bacteria")
-def getRankByName(name, synonym=True):
 
+def getRankByName(name, synonym=True):
+    """get the rank given a taxonomic name or a synonym
+    
+    Args:
+        name (str): query taxonomic name
+        synonym (bool, optional): should a synonym search be performed
+    
+    Returns:
+        str: the rank of the name if found otherwise no_rank
+    """
     try:
         return getRankByTaxid(getTaxidByName(name, 1, synonym)[0])
     except:
@@ -371,4 +391,7 @@ def getAllGiByTaxid(taxid):
     return result
     
     
+    
+if __name__ == '__main__':
+    pass
     
