@@ -1,7 +1,7 @@
 # pyphy
 Python library that interacts with NCBI taxonomy 
 
-This is the Python implementation of the blog post http://dgg32.blogspot.com/2013/07/pyphy-wrapper-program-for-ncbi-sqlite.html
+This is the Python implementation of the blog post http://dgg32.blogspot.com/2013/07/pyphy-wrapper-program-for-ncbi-sqlite.html.
 
 ## Getting Started
 
@@ -21,6 +21,8 @@ sqlite
 Scripts can be run as is without installation.
 
 ## Preparing the backend database
+
+Notice: please perform this step periodically to stay updated to newest NCBI Taxonomy.
 
 Download the taxdmp.zip from ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/ and unzip it.
 
