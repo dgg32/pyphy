@@ -22,7 +22,7 @@ Scripts can be run as is without installation.
 
 ## Preparing the backend database
 
-Notice: please perform this step periodically to stay updated to newest NCBI Taxonomy.
+Notice: please perform this step periodically to stay up to date with newest NCBI Taxonomy.
 
 Download the taxdmp.zip from ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/ and unzip it.
 
