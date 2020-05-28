@@ -6,8 +6,7 @@ import sys
 
 db = "./ncbi.db"
 
-
-config_file = './pyphy.config'
+config_file = os.path.join(os.path.dirname(os.path.realpath(__file__) ),'pyphy.config')
 
 if os.path.exists(config_file):
     config = configparser.ConfigParser()
@@ -17,7 +16,7 @@ if os.path.exists(config_file):
     db = config['DEFAULT']['db']
 
 
-
+#print (db)
 
 unknown = -1
 no_rank = "no rank"
