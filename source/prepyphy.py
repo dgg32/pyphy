@@ -1,4 +1,4 @@
-import sys, sqlite3
+import sys, sqlite3, os
 import configparser
 
 #python prepyphy.py folder db
@@ -16,7 +16,12 @@ config_file = os.path.join(os.path.dirname(os.path.realpath(__file__) ),'pyphy.c
 
 if os.path.exists(config_file):
     config = configparser.ConfigParser()
-    config["db"] = sys.argv[2]
+    config.read(config_file)
+
+    cfgfile = open(config_file, 'w')
+    config.set("", "db", sys.argv[2])
+    config.write(cfgfile)
+    cfgfile.close()
     
 
 
