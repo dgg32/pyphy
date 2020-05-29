@@ -111,8 +111,16 @@ def getRankByName(name, synonym=True):
 
 
 
-#pyphy.getNameByTaxid("2")
 def getNameByTaxid(taxid):
+    """get taxonomic name given a taxid
+    
+    Args:
+        taxid (str or int): query taxid
+        
+    
+    Returns:
+        str: return a taxonomic name if it is found otherwise unknown
+    """
     conn = sqlite3.connect(db)
     cursor = conn.cursor()
     command = "SELECT name FROM tree WHERE taxid = '" + str(taxid) +  "';"
@@ -126,6 +134,15 @@ def getNameByTaxid(taxid):
         return "unknown"
 
 def getAllNameByTaxid(taxid):
+    """get taxonomic names and synonyms given a taxid
+    
+    Args:
+        taxid (str or int): query taxid
+        
+    
+    Returns:
+        list: return a list taxonomic names and synonyms if it is found otherwise unknown
+    """
     result = []
     conn = sqlite3.connect(db)
     cursor = conn.cursor()
@@ -153,6 +170,15 @@ def getAllNameByTaxid(taxid):
     
 
 def getParentByTaxid(taxid):
+    """get parent taxid given a taxid
+    
+    Args:
+        taxid (str or int): query taxid
+        
+    
+    Returns:
+        int: return the parent taxid if it is found otherwise unknown
+    """
     conn = sqlite3.connect(db)
     cursor = conn.cursor()
     command = "SELECT parent FROM tree WHERE taxid = '" + str(taxid) +  "';"
@@ -168,6 +194,15 @@ def getParentByTaxid(taxid):
 
 #pyphy.getParentByName("Flavobacteriia")
 def getParentByName(name, synonym=True):
+    """get parent taxid given a taxonomic name
+    
+    Args:
+        name (str): query name
+        
+    
+    Returns:
+        list: return the parent taxid if it is found otherwise unknown
+    """
 
     try:
         return getParentByTaxid(getTaxidByName(name, 1, synonym)[0])
@@ -176,6 +211,16 @@ def getParentByName(name, synonym=True):
     
 
 def getPathByTaxid(taxid):
+    """get the taxonomic path given a taxid
+    
+    Args:
+        taxid (str or int): query taxid
+        
+    
+    Returns:
+        list: return a list of parent taxid if it is found otherwise an empty list
+    """
+
     path = []
     
     current_id = int(taxid)
@@ -190,6 +235,16 @@ def getPathByTaxid(taxid):
 
 
 def getDictPathByTaxid(taxid):
+    """get the taxonomic path with the ranks as keys given a taxid
+    
+    Args:
+        taxid (str or int): query taxid
+        
+    
+    Returns:
+        dict: return a dict of rank: parent taxid if it is found otherwise an empty dict
+    """
+
     path = {}
 
     current_id = int(taxid)
@@ -205,25 +260,20 @@ def getDictPathByTaxid(taxid):
     
     return path
 
-    
-def getTaxidByGi(gi, molecule="protein"):
-    conn = sqlite3.connect(db)
-    cursor = conn.cursor()
-    
-    command = "SELECT taxid FROM gi_taxid WHERE gi = '" + str(gi) +  "';"
-    if molecule=="dna":
-        command = "SELECT taxid FROM nt_gi_taxid WHERE gi = '" + str(gi) +  "';"
-    cursor.execute(command)
-    
-    result = cursor.fetchone()
-    cursor.close()
-    if result:
-        return result[0]
-    else:
-        return unknown
+
     
     
 def getSonsByTaxid(taxid):
+
+    """get the 1st-level sons given a taxid
+    
+    Args:
+        taxid (str or int): query taxid
+        
+    
+    Returns:
+        list: return a list of son taxid if it is found otherwise an empty list
+    """
     conn = sqlite3.connect(db)
     cursor = conn.cursor()
     command = "SELECT taxid FROM tree WHERE parent = '" + str(taxid) +  "';"
@@ -233,6 +283,16 @@ def getSonsByTaxid(taxid):
 
 
 def getSonsByName(name, synonym=False):
+    """get the 1st-level sons given a taxonomic name
+    
+    Args:
+        name (str): query name
+        
+    
+    Returns:
+        list: return a list of son taxid if it is found otherwise an empty list
+    """
+
     conn = sqlite3.connect(db)
     cursor = conn.cursor()
     command = "SELECT taxid FROM tree WHERE parent = '" + str(getTaxidByName(name, 1, synonym)[0]) +  "';"
@@ -241,56 +301,17 @@ def getSonsByName(name, synonym=False):
     return result
 
 
-#If you create your database in a thread usually the main thread 
-#and try to use it in another thread your will get: ProgrammingError: SQLite objects 
-#created in a thread can only be used in that same thread. The object was created in 
-#thread id SOME_ID and this is thread id SOME_ID. This is because you created the 
-#cursor object in the main thread, 
-#if you for example create only the connection object in the main thread and create 
-#cursors when you want to query the database
-
-def getGiByTaxid(taxid, molecule="protein"):
-    conn = sqlite3.connect(db)
-    command = "SELECT gi FROM gi_taxid WHERE taxid = '" + str(taxid) +  "';"
-    if molecule == "dna":
-        command = "SELECT gi FROM nt_gi_taxid WHERE taxid = '" + str(taxid) +  "';"
-    cursor = conn.cursor()
-    #print command
-    try:
-        result = [row[0] for row in cursor.execute(command)] 
-        
-        cursor.close()
-        return result
-    except:
-        pass
-
-
-
-#getAllSonsByTaxid legacy code, single thread = slow
-#def getAllSonsByTaxid(taxid):
-#    sons_for_result = [son for son in getSonsByTaxid(taxid)]
-#    sons_for_search = [son for son in getSonsByTaxid(taxid)]
-#    
-#    for son in sons_for_search:
-#        sons_for_result += getAllSonsByTaxid(son)
-#    #print sons_for_result
-#    return sons_for_result
-
-def getTaxidByRef(ref):
-    conn = sqlite3.connect(db)
-    cursor = conn.cursor()
-    command = "SELECT taxid FROM nt_ref_taxid WHERE ref = '" + str(ref) +  "';"
-
-    cursor.execute(command)
-    result = cursor.fetchone()
-    cursor.close()
-    if result:
-        return result[0]
-    else:
-        return unknown
 
 def getAllSonsByTaxid(taxid):
-
+    """get the sons of all levels given a taxid
+    
+    Args:
+        taxid (str or int): query taxid
+        
+    
+    Returns:
+        list: return a list of son taxid if it is found otherwise an empty list
+    """
 
     from threading import Thread
     import queue
@@ -339,57 +360,7 @@ def getAllSonsByTaxid(taxid):
     
 
 
-def getAllGiByTaxid(taxid):
 
-    #import multiprocessing
-    from threading import Thread
-    import queue
-    in_queue = queue.Queue()
-    out_queue = queue.Queue()
-
-    #queue = multiprocessing.Queue()
-    #out_queue = multiprocessing.Queue()
-
-    allSons = getAllSonsByTaxid(taxid)
-
-    
-    def work():
-        while True:
-            sonId = in_queue.get()
-            out_queue.put(getGiByTaxid(sonId))
-            in_queue.task_done()
-
-
-    for i in range(20):
-        
-        t = Thread(target=work)
-        #not daemon no exit in interpretor and script mode
-        t.daemon = True
-
-        #t = multiprocessing.Process(target=work, args=(queue,out_queue))
-        #t.daemon=True
-
-        #t = Worker(queue)
-
-        t.start()
-        
-    in_queue.put(taxid)
-    for son in allSons:
-        in_queue.put(son)
-        
-    
-    in_queue.join()        
-    
-    result = []
-
-    while not out_queue.empty():
-        
-        result += out_queue.get()
-   
-    #print "time: " + str(time.time()-start)
-    return result
-    
-    
     
 if __name__ == '__main__':
     pass

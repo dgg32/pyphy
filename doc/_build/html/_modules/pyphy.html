@@ -149,8 +149,7 @@
 
 <span class="n">db</span> <span class="o">=</span> <span class="s2">&quot;./ncbi.db&quot;</span>
 
-
-<span class="n">config_file</span> <span class="o">=</span> <span class="s1">&#39;./pyphy.config&#39;</span>
+<span class="n">config_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span> <span class="p">),</span><span class="s1">&#39;pyphy.config&#39;</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
@@ -160,7 +159,7 @@
     <span class="n">db</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;DEFAULT&#39;</span><span class="p">][</span><span class="s1">&#39;db&#39;</span><span class="p">]</span>
 
 
-
+<span class="c1">#print (db)</span>
 
 <span class="n">unknown</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 <span class="n">no_rank</span> <span class="o">=</span> <span class="s2">&quot;no rank&quot;</span>
@@ -255,8 +254,16 @@
 
 
 
-<span class="c1">#pyphy.getNameByTaxid(&quot;2&quot;)</span>
 <div class="viewcode-block" id="getNameByTaxid"><a class="viewcode-back" href="../pyphy.html#pyphy.getNameByTaxid">[docs]</a><span class="k">def</span> <span class="nf">getNameByTaxid</span><span class="p">(</span><span class="n">taxid</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;get taxonomic name given a taxid</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        taxid (str or int): query taxid</span>
+<span class="sd">        </span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        str: return a taxonomic name if it is found otherwise unknown</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
     <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
     <span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;SELECT name FROM tree WHERE taxid = &#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">taxid</span><span class="p">)</span> <span class="o">+</span>  <span class="s2">&quot;&#39;;&quot;</span>
@@ -270,6 +277,15 @@
         <span class="k">return</span> <span class="s2">&quot;unknown&quot;</span></div>
 
 <div class="viewcode-block" id="getAllNameByTaxid"><a class="viewcode-back" href="../pyphy.html#pyphy.getAllNameByTaxid">[docs]</a><span class="k">def</span> <span class="nf">getAllNameByTaxid</span><span class="p">(</span><span class="n">taxid</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;get taxonomic names and synonyms given a taxid</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        taxid (str or int): query taxid</span>
+<span class="sd">        </span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list: return a list taxonomic names and synonyms if it is found otherwise unknown</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
     <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
@@ -297,6 +313,15 @@
     
 
 <div class="viewcode-block" id="getParentByTaxid"><a class="viewcode-back" href="../pyphy.html#pyphy.getParentByTaxid">[docs]</a><span class="k">def</span> <span class="nf">getParentByTaxid</span><span class="p">(</span><span class="n">taxid</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;get parent taxid given a taxid</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        taxid (str or int): query taxid</span>
+<span class="sd">        </span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        int: return the parent taxid if it is found otherwise unknown</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
     <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
     <span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;SELECT parent FROM tree WHERE taxid = &#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">taxid</span><span class="p">)</span> <span class="o">+</span>  <span class="s2">&quot;&#39;;&quot;</span>
@@ -312,6 +337,15 @@
 
 <span class="c1">#pyphy.getParentByName(&quot;Flavobacteriia&quot;)</span>
 <div class="viewcode-block" id="getParentByName"><a class="viewcode-back" href="../pyphy.html#pyphy.getParentByName">[docs]</a><span class="k">def</span> <span class="nf">getParentByName</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">synonym</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;get parent taxid given a taxonomic name</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): query name</span>
+<span class="sd">        </span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list: return the parent taxid if it is found otherwise unknown</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">getParentByTaxid</span><span class="p">(</span><span class="n">getTaxidByName</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">synonym</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
@@ -320,6 +354,16 @@
     
 
 <div class="viewcode-block" id="getPathByTaxid"><a class="viewcode-back" href="../pyphy.html#pyphy.getPathByTaxid">[docs]</a><span class="k">def</span> <span class="nf">getPathByTaxid</span><span class="p">(</span><span class="n">taxid</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;get the taxonomic path given a taxid</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        taxid (str or int): query taxid</span>
+<span class="sd">        </span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list: return a list of parent taxid if it is found otherwise an empty list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">path</span> <span class="o">=</span> <span class="p">[]</span>
     
     <span class="n">current_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">taxid</span><span class="p">)</span>
@@ -334,6 +378,16 @@
 
 
 <div class="viewcode-block" id="getDictPathByTaxid"><a class="viewcode-back" href="../pyphy.html#pyphy.getDictPathByTaxid">[docs]</a><span class="k">def</span> <span class="nf">getDictPathByTaxid</span><span class="p">(</span><span class="n">taxid</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;get the taxonomic path with the ranks as keys given a taxid</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        taxid (str or int): query taxid</span>
+<span class="sd">        </span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: return a dict of rank: parent taxid if it is found otherwise an empty dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">path</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="n">current_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">taxid</span><span class="p">)</span>
@@ -349,25 +403,20 @@
     
     <span class="k">return</span> <span class="n">path</span></div>
 
-    
-<div class="viewcode-block" id="getTaxidByGi"><a class="viewcode-back" href="../pyphy.html#pyphy.getTaxidByGi">[docs]</a><span class="k">def</span> <span class="nf">getTaxidByGi</span><span class="p">(</span><span class="n">gi</span><span class="p">,</span> <span class="n">molecule</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">):</span>
-    <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
-    <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
-    
-    <span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;SELECT taxid FROM gi_taxid WHERE gi = &#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">gi</span><span class="p">)</span> <span class="o">+</span>  <span class="s2">&quot;&#39;;&quot;</span>
-    <span class="k">if</span> <span class="n">molecule</span><span class="o">==</span><span class="s2">&quot;dna&quot;</span><span class="p">:</span>
-        <span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;SELECT taxid FROM nt_gi_taxid WHERE gi = &#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">gi</span><span class="p">)</span> <span class="o">+</span>  <span class="s2">&quot;&#39;;&quot;</span>
-    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-    
-    <span class="n">result</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
-    <span class="n">cursor</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">unknown</span></div>
+
     
     
 <div class="viewcode-block" id="getSonsByTaxid"><a class="viewcode-back" href="../pyphy.html#pyphy.getSonsByTaxid">[docs]</a><span class="k">def</span> <span class="nf">getSonsByTaxid</span><span class="p">(</span><span class="n">taxid</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;get the 1st-level sons given a taxid</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        taxid (str or int): query taxid</span>
+<span class="sd">        </span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list: return a list of son taxid if it is found otherwise an empty list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
     <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
     <span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;SELECT taxid FROM tree WHERE parent = &#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">taxid</span><span class="p">)</span> <span class="o">+</span>  <span class="s2">&quot;&#39;;&quot;</span>
@@ -377,6 +426,16 @@
 
 
 <div class="viewcode-block" id="getSonsByName"><a class="viewcode-back" href="../pyphy.html#pyphy.getSonsByName">[docs]</a><span class="k">def</span> <span class="nf">getSonsByName</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">synonym</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;get the 1st-level sons given a taxonomic name</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): query name</span>
+<span class="sd">        </span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list: return a list of son taxid if it is found otherwise an empty list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
     <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
     <span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;SELECT taxid FROM tree WHERE parent = &#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">getTaxidByName</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">synonym</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span>  <span class="s2">&quot;&#39;;&quot;</span>
@@ -385,56 +444,17 @@
     <span class="k">return</span> <span class="n">result</span></div>
 
 
-<span class="c1">#If you create your database in a thread usually the main thread </span>
-<span class="c1">#and try to use it in another thread your will get: ProgrammingError: SQLite objects </span>
-<span class="c1">#created in a thread can only be used in that same thread. The object was created in </span>
-<span class="c1">#thread id SOME_ID and this is thread id SOME_ID. This is because you created the </span>
-<span class="c1">#cursor object in the main thread, </span>
-<span class="c1">#if you for example create only the connection object in the main thread and create </span>
-<span class="c1">#cursors when you want to query the database</span>
-
-<div class="viewcode-block" id="getGiByTaxid"><a class="viewcode-back" href="../pyphy.html#pyphy.getGiByTaxid">[docs]</a><span class="k">def</span> <span class="nf">getGiByTaxid</span><span class="p">(</span><span class="n">taxid</span><span class="p">,</span> <span class="n">molecule</span><span class="o">=</span><span class="s2">&quot;protein&quot;</span><span class="p">):</span>
-    <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
-    <span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;SELECT gi FROM gi_taxid WHERE taxid = &#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">taxid</span><span class="p">)</span> <span class="o">+</span>  <span class="s2">&quot;&#39;;&quot;</span>
-    <span class="k">if</span> <span class="n">molecule</span> <span class="o">==</span> <span class="s2">&quot;dna&quot;</span><span class="p">:</span>
-        <span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;SELECT gi FROM nt_gi_taxid WHERE taxid = &#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">taxid</span><span class="p">)</span> <span class="o">+</span>  <span class="s2">&quot;&#39;;&quot;</span>
-    <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
-    <span class="c1">#print command</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">command</span><span class="p">)]</span> 
-        
-        <span class="n">cursor</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">result</span>
-    <span class="k">except</span><span class="p">:</span>
-        <span class="k">pass</span></div>
-
-
-
-<span class="c1">#getAllSonsByTaxid legacy code, single thread = slow</span>
-<span class="c1">#def getAllSonsByTaxid(taxid):</span>
-<span class="c1">#    sons_for_result = [son for son in getSonsByTaxid(taxid)]</span>
-<span class="c1">#    sons_for_search = [son for son in getSonsByTaxid(taxid)]</span>
-<span class="c1">#    </span>
-<span class="c1">#    for son in sons_for_search:</span>
-<span class="c1">#        sons_for_result += getAllSonsByTaxid(son)</span>
-<span class="c1">#    #print sons_for_result</span>
-<span class="c1">#    return sons_for_result</span>
-
-<div class="viewcode-block" id="getTaxidByRef"><a class="viewcode-back" href="../pyphy.html#pyphy.getTaxidByRef">[docs]</a><span class="k">def</span> <span class="nf">getTaxidByRef</span><span class="p">(</span><span class="n">ref</span><span class="p">):</span>
-    <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
-    <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
-    <span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;SELECT taxid FROM nt_ref_taxid WHERE ref = &#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span> <span class="o">+</span>  <span class="s2">&quot;&#39;;&quot;</span>
-
-    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
-    <span class="n">cursor</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">unknown</span></div>
 
 <div class="viewcode-block" id="getAllSonsByTaxid"><a class="viewcode-back" href="../pyphy.html#pyphy.getAllSonsByTaxid">[docs]</a><span class="k">def</span> <span class="nf">getAllSonsByTaxid</span><span class="p">(</span><span class="n">taxid</span><span class="p">):</span>
-
+    <span class="sd">&quot;&quot;&quot;get the sons of all levels given a taxid</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        taxid (str or int): query taxid</span>
+<span class="sd">        </span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list: return a list of son taxid if it is found otherwise an empty list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
     <span class="kn">import</span> <span class="nn">queue</span>
@@ -483,57 +503,7 @@
     
 
 
-<div class="viewcode-block" id="getAllGiByTaxid"><a class="viewcode-back" href="../pyphy.html#pyphy.getAllGiByTaxid">[docs]</a><span class="k">def</span> <span class="nf">getAllGiByTaxid</span><span class="p">(</span><span class="n">taxid</span><span class="p">):</span>
 
-    <span class="c1">#import multiprocessing</span>
-    <span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
-    <span class="kn">import</span> <span class="nn">queue</span>
-    <span class="n">in_queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
-    <span class="n">out_queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
-
-    <span class="c1">#queue = multiprocessing.Queue()</span>
-    <span class="c1">#out_queue = multiprocessing.Queue()</span>
-
-    <span class="n">allSons</span> <span class="o">=</span> <span class="n">getAllSonsByTaxid</span><span class="p">(</span><span class="n">taxid</span><span class="p">)</span>
-
-    
-    <span class="k">def</span> <span class="nf">work</span><span class="p">():</span>
-        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">sonId</span> <span class="o">=</span> <span class="n">in_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-            <span class="n">out_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">getGiByTaxid</span><span class="p">(</span><span class="n">sonId</span><span class="p">))</span>
-            <span class="n">in_queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
-
-
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
-        
-        <span class="n">t</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">work</span><span class="p">)</span>
-        <span class="c1">#not daemon no exit in interpretor and script mode</span>
-        <span class="n">t</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
-
-        <span class="c1">#t = multiprocessing.Process(target=work, args=(queue,out_queue))</span>
-        <span class="c1">#t.daemon=True</span>
-
-        <span class="c1">#t = Worker(queue)</span>
-
-        <span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-        
-    <span class="n">in_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">taxid</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">son</span> <span class="ow">in</span> <span class="n">allSons</span><span class="p">:</span>
-        <span class="n">in_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">son</span><span class="p">)</span>
-        
-    
-    <span class="n">in_queue</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>        
-    
-    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">while</span> <span class="ow">not</span> <span class="n">out_queue</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
-        
-        <span class="n">result</span> <span class="o">+=</span> <span class="n">out_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-   
-    <span class="c1">#print &quot;time: &quot; + str(time.time()-start)</span>
-    <span class="k">return</span> <span class="n">result</span></div>
-    
-    
     
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="k">pass</span>
