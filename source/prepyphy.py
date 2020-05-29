@@ -1,4 +1,5 @@
 import sys, sqlite3
+import configparser
 
 #python prepyphy.py folder db
 
@@ -10,6 +11,16 @@ taxid_synonym = {}
 
 folder = sys.argv[1]
 conn = sqlite3.connect(sys.argv[2])
+
+config_file = os.path.join(os.path.dirname(os.path.realpath(__file__) ),'pyphy.config')
+
+if os.path.exists(config_file):
+    config = configparser.ConfigParser()
+    config["db"] = sys.argv[2]
+    
+
+
+
 
 if not folder.endswith("/"):
     folder += "/"
@@ -52,7 +63,9 @@ for line in open(nodes_dmp, 'r'):
 
 
 cursor = conn.cursor()
+cursor.execute('''PRAGMA journal_mode = OFF''')
 cursor.execute("CREATE TABLE tree (taxid integer, name text, parent integer, rank text);")
+
 
 for taxid in tree.keys():
     command = "INSERT INTO tree VALUES ('" + str(taxid) + "', '" + tree[taxid][0].replace("'","''") + "', '" + str(tree[taxid][1]) + "','" + tree[taxid][2] +"');"
@@ -73,7 +86,9 @@ cursor.execute(command)
 
 ####synonym table
 
+cursor.execute('''PRAGMA journal_mode = OFF''')
 cursor.execute("CREATE TABLE synonym (id integer, taxid integer, name text);")
+
 
 index = 0
 
