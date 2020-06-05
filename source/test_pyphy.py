@@ -20,3 +20,5 @@ class TestPyphy (unittest.TestCase):
 	def test_getDictPathByTaxid(self):
 		self.assertEqual(pyphy.getDictPathByTaxid(1224), {'phylum': 1224, 'superkingdom': 2, 'no rank': 1})
 
+	def test_getSonsByName(self):
+		self.assertCountEqual(pyphy.getSonsByName("Leptospirillum"), [184209, 261385, 261386, 655606, 1260982, 2629551])
