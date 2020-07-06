@@ -115,3 +115,4 @@ command = "CREATE INDEX taxid_on_synonym ON synonym(taxid);"
 cursor.execute(command)
 
 conn.commit()
+
