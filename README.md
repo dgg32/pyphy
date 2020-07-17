@@ -30,7 +30,9 @@ Download the taxdmp.zip from ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/ and unzip 
 python prepyphy.py [ncbi_download_folder] [db_path]
 ```
 
-Set the db variable in pyphy.config to db_path.
+This step will set up the "db_path" automatically.
+
+If you move the database afterwards, don't forget to refresh db_path in pyphy.config.
 
 
 ### Using the library
