@@ -5,6 +5,7 @@ import configparser
 import sys
 
 db = "./ncbi.db"
+threads = 20
 
 config_file = os.path.join(os.path.dirname(os.path.realpath(__file__) ),'pyphy.config')
 
@@ -14,6 +15,8 @@ if os.path.exists(config_file):
 
 
     db = config['DEFAULT']['db']
+
+    threads = int(config['DEFAULT']['threads'])
 
 
 #print (db)
@@ -335,7 +338,7 @@ def getAllSonsByTaxid(taxid):
        
             in_queue.task_done()
     
-    for i in range(20):
+    for i in range(threads):
         
         t = Thread(target=work)
         t.daemon = True

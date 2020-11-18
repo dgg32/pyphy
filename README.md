@@ -5,7 +5,7 @@ This is the Python implementation of the blog post http://dgg32.blogspot.com/201
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Prerequisites
 
@@ -16,13 +16,10 @@ sqlite
 
 ```
 
-### Installing
-
-Scripts can be run as is without installation.
 
 ## Preparing the backend database
 
-Notice: please perform this step periodically to stay up to date with newest NCBI Taxonomy.
+Notice: please perform this step periodically to stay up to date with the NCBI Taxonomy.
 
 Download the taxdmp.zip from ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/ and unzip it.
 
@@ -30,9 +27,9 @@ Download the taxdmp.zip from ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/ and unzip 
 python prepyphy.py [ncbi_download_folder] [db_path]
 ```
 
-This step will set up the "db_path" automatically.
+This step will set up the "db_path" in pyphy.config automatically.
 
-If you move the database afterwards, don't forget to refresh db_path in pyphy.config.
+If you move the database afterwards, please don't forget to refresh db_path in pyphy.config.
 
 
 ### Using the library
