@@ -226,7 +226,12 @@ def getPathByTaxid(taxid):
 
     path = []
     
-    current_id = int(taxid)
+    current_id = -1
+
+    try:
+        current_id = int(taxid)
+    except:
+        pass
     path.append(current_id)
     
     while current_id != 1 and current_id != unknown:
@@ -250,7 +255,12 @@ def getDictPathByTaxid(taxid):
 
     path = {}
 
-    current_id = int(taxid)
+    current_id = -1
+
+    try:
+        current_id = int(taxid)
+    except:
+        pass
     rank = getRankByTaxid(current_id)
     path[rank] = current_id
     
@@ -343,9 +353,16 @@ def getAllSonsByTaxid(taxid):
         t = Thread(target=work)
         t.daemon = True
         t.start()
+
+    current_id = -1
+
+    try:
+        current_id = int(taxid)
+    except:
+        pass
     
 
-    for son in getSonsByTaxid(taxid):
+    for son in getSonsByTaxid(current_id):
         out_queue.put(son)
         in_queue.put(son)
         
