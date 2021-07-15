@@ -13,7 +13,6 @@ These instructions will get you a copy of the project up and running on your loc
  
 ```
 sqlite
-
 ```
 
 
@@ -34,7 +33,8 @@ If you move the database afterwards, please don't forget to refresh db_path in p
 
 ### Using the library
 
-Once the database is setup, you can import the pyphy library in your Python code by
+In order to use the library system wide, put the absolute path of "source" into your PYTHONPATH, here is [how](https://stackoverflow.com/questions/3402168/permanently-add-a-directory-to-pythonpath). Then you can import the pyphy library in your Python code by
+
 
 ```
 import pyphy
