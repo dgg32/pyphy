@@ -33,7 +33,7 @@ If you move the database afterwards, please don't forget to refresh db_path in p
 
 ### Using the library
 
-In order to use the library system wide, put the absolute path of "source" into your PYTHONPATH, 
+In order to use the library system wide, add this line to your ~/.bashrc.
 ```
 export PYTHONPATH="${PYTHONPATH}:/my/own/pyphy/source/"
 ```
