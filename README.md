@@ -38,8 +38,6 @@ In order to use the library system wide, put the absolute path of "source" into 
 export PYTHONPATH="${PYTHONPATH}:/my/own/pyphy/source/"
 ```
 
-[source](https://stackoverflow.com/questions/3402168/permanently-add-a-directory-to-pythonpath). 
-
 
 Then you can import the pyphy library in your Python code by
 
