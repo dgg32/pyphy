@@ -2,4 +2,4 @@ language: python
 python:
   - "3.7"
 script:
-  - python ./source/test_pyphy.py
+  - python ./src/pyphy/test_pyphy.py
