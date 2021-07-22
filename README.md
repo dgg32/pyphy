@@ -33,10 +33,12 @@ If you move the database afterwards, please don't forget to refresh db_path in p
 
 ### Using the library
 
-In order to use the library system wide, add this line to your ~/.bashrc.
+Install the library via pip
+
 ```
-export PYTHONPATH="${PYTHONPATH}:/my/own/pyphy/source/"
+pip install pyphy
 ```
+
 
 
 Then you can import the pyphy library in your Python code by

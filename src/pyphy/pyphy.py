@@ -1,8 +1,6 @@
 import sqlite3
-import shutil
 import os
 import configparser
-import sys
 
 db = "./ncbi.db"
 threads = 20
