@@ -39,13 +39,33 @@ Install the library via pip
 pip install pyphy
 ```
 
+Use pip show to show the package location. Copy the value in "Location"
+
+```
+pip show pyphy 
+```
+
+For example, mine is /Users/dgg32/opt/anaconda3/envs/dbt/lib/python3.8/site-packages.
+
+Then run prepyphy.py to prepare the database. It is in your "Location/" + pyphy folder.
+```
+python [location of your prepyphy.py] [location of taxdmp] [location_you_want_to_put_your_ncbi_database]
+
+```
+
+For example, mine is 
+
+```
+python /Users/dgg32/opt/anaconda3/envs/dbt/lib/python3.8/site-packages/pyphy/prepyphy.py /Users/dgg32/Downloads/taxdump /Users/dgg32/opt/anaconda3/envs/dbt/lib/python3.8/site-packages/pyphy/ncbi
+
+```
 
 
 Then you can import the pyphy library in your Python code by
 
 
 ```
-import pyphy
+from pyphy import pyphy
 ```
 
 pyphy provides the following queries inside the NCBI taxonomy:
