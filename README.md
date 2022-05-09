@@ -65,7 +65,7 @@ Then you can import the pyphy library in your Python code by
 
 
 ```
-from pyphy import pyphy
+import pyphy
 ```
 
 pyphy provides the following queries inside the NCBI taxonomy:
