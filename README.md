@@ -81,6 +81,20 @@ NCBI TaxID -> all children
 For code examples and documentation please refer to documentations.
 
 
+## Running the tests
+
+`test_pyphy.py` runs against a small frozen snapshot of real NCBI data checked in as `src/pyphy/test_fixture.db`, not against your live `ncbi.db`. This keeps the suite deterministic: NCBI revises the real taxonomy constantly (renamed ranks, renamed preferred names, new species), so pinning tests to a moving target means an unrelated NCBI update could turn a correct assertion into a failure.
+
+```
+python src/pyphy/test_pyphy.py
+```
+
+If you deliberately want the fixture (and the test expectations) to track a newer NCBI release, rebuild it from a freshly-prepared `ncbi.db` and update the assertions in `test_pyphy.py` to match:
+
+```
+python src/pyphy/build_test_fixture.py [path_to_a_real_ncbi.db]
+```
+
 ## Authors
 
 * **Sixing Huang** - *Concept and Coding*
