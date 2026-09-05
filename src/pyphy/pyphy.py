@@ -136,20 +136,14 @@ def getAllNameByTaxid(taxid):
     Returns:
         list: return a list taxonomic names and synonyms if it is found otherwise unknown
     """
-    result = []
-    conn = _connect()
-    try:
-        cursor = conn.cursor()
-
-        cursor.execute("SELECT name FROM tree WHERE taxid = ?;", (str(taxid),))
-        name = cursor.fetchone()
-        if name:
-            result.append(name[0])
-
-        cursor.execute("SELECT name FROM synonym WHERE taxid = ?;", (str(taxid),))
-        result.extend(row[0] for row in cursor.fetchall())
-    finally:
-        conn.close()
+    # one round trip instead of two: let sqlite concatenate the scientific
+    # name and its synonyms itself rather than fetching each separately.
+    command = """
+        SELECT name FROM tree WHERE taxid = ?
+        UNION ALL
+        SELECT name FROM synonym WHERE taxid = ?;
+    """
+    result = [row[0] for row in _fetchall(command, (str(taxid), str(taxid)))]
 
     return result if len(result) != 0 else ["unknown"]
 
@@ -186,6 +180,39 @@ def getParentByName(name, synonym=True):
         return unknown
 
 
+def _ancestor_chain(taxid):
+    """(taxid, rank) for every node from `taxid` up to the root, in that
+    leaf-to-root order, fetched with one recursive query instead of
+    walking the tree a single parent-lookup at a time."""
+
+    current_id = _to_taxid(taxid)
+    command = """
+        WITH RECURSIVE ancestry(taxid, parent, rank) AS (
+            SELECT taxid, parent, rank FROM tree WHERE taxid = ?
+            UNION ALL
+            SELECT tree.taxid, tree.parent, tree.rank
+            FROM tree JOIN ancestry ON tree.taxid = ancestry.parent
+            WHERE ancestry.taxid != 1
+        )
+        SELECT taxid, rank FROM ancestry;
+    """
+    rows = _fetchall(command, (current_id,))
+
+    if not rows:
+        # taxid isn't in the tree at all (bad input, e.g. "N/A")
+        return [(current_id, no_rank)]
+    if rows[-1][0] != 1:
+        # recursion stopped without reaching the root -- some ancestor's
+        # parent isn't itself a row in tree. Can't happen on a database
+        # prepyphy.py built from a real NCBI dump (every node chains to
+        # taxid 1), so this is just a defined fallback for a broken/
+        # incomplete database rather than a mirror of the old code's
+        # handling of the same situation (which reported one further
+        # dangling stub before giving up).
+        rows.append((unknown, no_rank))
+    return rows
+
+
 def getPathByTaxid(taxid):
     """get the taxonomic path given a taxid
 
@@ -196,22 +223,7 @@ def getPathByTaxid(taxid):
     Returns:
         list: return a list of parent taxid if it is found otherwise an empty list
     """
-
-    current_id = _to_taxid(taxid)
-    path = [current_id]
-
-    conn = _connect()
-    try:
-        cursor = conn.cursor()
-        while current_id != 1 and current_id != unknown:
-            cursor.execute("SELECT parent FROM tree WHERE taxid = ?;", (str(current_id),))
-            row = cursor.fetchone()
-            current_id = int(row[0]) if row else unknown
-            path.append(current_id)
-    finally:
-        conn.close()
-
-    return path[::-1]
+    return [tid for tid, _ in reversed(_ancestor_chain(taxid))]
 
 
 def getDictPathByTaxid(taxid):
@@ -224,30 +236,7 @@ def getDictPathByTaxid(taxid):
     Returns:
         dict: return a dict of rank: parent taxid if it is found otherwise an empty dict
     """
-
-    current_id = _to_taxid(taxid)
-    path = {}
-
-    conn = _connect()
-    try:
-        cursor = conn.cursor()
-
-        def rank_of(tid):
-            cursor.execute("SELECT rank FROM tree WHERE taxid = ?;", (str(tid),))
-            row = cursor.fetchone()
-            return row[0] if row else no_rank
-
-        path[rank_of(current_id)] = current_id
-
-        while current_id != 1 and current_id != unknown:
-            cursor.execute("SELECT parent FROM tree WHERE taxid = ?;", (str(current_id),))
-            row = cursor.fetchone()
-            current_id = int(row[0]) if row else unknown
-            path[rank_of(current_id)] = current_id
-    finally:
-        conn.close()
-
-    return path
+    return {rank: tid for tid, rank in _ancestor_chain(taxid)}
 
 
 def getSonsByTaxid(taxid):
